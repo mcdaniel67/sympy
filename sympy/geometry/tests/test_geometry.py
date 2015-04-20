@@ -814,10 +814,6 @@ def test_line3d():
     assert Line3D(perp_1) == perp_1
     raises(ValueError, lambda: Line3D(p1))
 
-    # Test contains Line3D
-    assert parallel_1.contains(Plane(x1, x2, x3)) == False
-
-
 def test_plane():
     p1 = Point3D(0, 0, 0)
     p2 = Point3D(1, 1, 1)
