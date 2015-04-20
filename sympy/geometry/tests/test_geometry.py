@@ -171,6 +171,16 @@ def test_point():
     assert p.translate(y=1) == Point(1, 2)
     assert p.translate(*p.args) == Point(2, 2)
 
+    # Test __new__
+    assert Point(p,1, evaluate = False) == p
+
+    # Test is_collinear
+    assert Point.is_collinear(Point(2, 2), Point(3, 5), Point(0,0)) == False
+
+    # Test is_concyclic
+    assert Point.is_concyclic(p, Point(-1, -1), Point(1, 0), Point(0,0)) == False
+
+
 def test_point3D():
     p1 = Point3D(x1, x2, x3)
     p2 = Point3D(y1, y2, y3)
@@ -241,8 +251,9 @@ def test_point3D():
     assert p1_1.length == 0
     assert p1_2.length == 0
 
-    # Test are_colinear type error
+    # Test are_colinear type error Bug
     raises(TypeError, lambda: Point3D.are_collinear(p, x))
+    # assert Point3D.are_collinear() == False
 
     # Test are_coplanar
     planar2 = Point3D(1, -1, 1)
@@ -673,6 +684,9 @@ def test_line3d():
     assert Line3D.are_concurrent(l1) is False
     assert Line3D.are_concurrent(l1, l2)
     assert Line3D.are_concurrent(l1, l1_1, l3) is False
+    parallel_1 = Line3D(Point3D(0, 0, 0), Point3D(1, 0, 0))
+    parallel_2 = Line3D(Point3D(0, 1, 0), Point3D(1, 1, 0))
+    assert Line3D.are_concurrent(parallel_1, parallel_2) == False
 
     # Finding angles
     l1_1 = Line3D(p1, Point3D(5, 0, 0))
@@ -785,6 +799,23 @@ def test_line3d():
     assert Line3D((0, 0), (t, t)).intersection(Line3D((0, 1), (t, t))) == \
         [Point3D(t, t, 0)]
     assert Line3D((0, 0, 0), (x, y, z)).contains((2*x, 2*y, 2*z))
+
+    # Test is_perpendicular
+    perp_1 = Line3D(p1, Point3D(0, 1, 0))
+    assert Line3D.is_perpendicular(parallel_1, perp_1) == True
+    assert Line3D.is_perpendicular(parallel_1, parallel_2) == False
+
+    # Test projection
+    assert parallel_1.projection(Point3D(5, 5, 0)) == Point3D(5, 0, 0)
+    assert parallel_1.projection(parallel_2) == [parallel_1]
+    raises(GeometryError, lambda: parallel_1.projection(Plane(p1, p2, p6)))
+
+    # Test __new__
+    assert Line3D(perp_1) == perp_1
+    raises(ValueError, lambda: Line3D(p1))
+
+    # Test contains Line3D
+    assert parallel_1.contains(Plane(x1, x2, x3)) == False
 
 
 def test_plane():

@@ -203,8 +203,7 @@ class Point(GeometryEntity):
         if not all(isinstance(p, Point) for p in points):
             raise TypeError('Must pass only 3D Point objects')
 
-        if len(points) == 0:
-            return False
+        # This is an unbound method, and thus len(points) is guarenteed >0
         if len(points) <= 2:
             return True  # two points always form a line
         points = [Point(a) for a in points]
@@ -273,8 +272,8 @@ class Point(GeometryEntity):
         False
 
         """
-        if len(points) == 0:
-            return False
+        points = list(set(points))
+        # This is an unbound method, and thus len(points) is guarenteed >0
         if len(points) <= 2:
             return True
         points = [Point(p) for p in points]
