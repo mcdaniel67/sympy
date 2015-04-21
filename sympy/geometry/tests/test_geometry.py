@@ -42,6 +42,28 @@ def feq(a, b):
     t = Float("1.0E-10")
     return -t < a - b < t
 
+# Begin parametric tests for a point
+def param_transform_x(point, units):
+    if isinstance(point, Point):
+        mtrx = Matrix([[1, 0, units], [0, 1, 0], [0, 0, 1]])
+        assert point.transform(mtrx) == point.translate(units, 0)
+
+def param_transform_y(point, units):
+    if isinstance(point, Point):
+        mtrx = Matrix([[1, 0, 0], [0, 1, units], [0, 0, 1]])
+        assert point.transform(mtrx) == point.translate(0, units)
+
+def param_rot(point, theta):
+    if isinstance(point, Point):
+        mtrx = Matrix([[cos(theta), -sin(theta), 0], \
+        [sin(theta), cos(theta), 0], [0, 0, 1]])
+        assert point.transform(mtrx) == point.rotate(theta)
+
+def param_scale(point, x=1, y=1):
+    if isinstance(point, Point):
+        mtrx = Matrix([[x, 0, 0], [0, y, 0], [0, 0, 1]])
+        assert point.transform(mtrx) == point.scale(x, y)
+# End parametric tests for a point
 
 def test_curve():
     s = Symbol('s')
@@ -179,6 +201,14 @@ def test_point():
 
     # Test is_concyclic
     assert Point.is_concyclic(p, Point(-1, -1), Point(1, 0), Point(0,0)) == False
+    for iterator1 in range(20):
+        for iterator2 in range(20):
+            param_transform_x(p, iterator1)
+            param_transform_y(p, iterator1)
+            param_rot(p, iterator1 * iterator2)
+            param_scale(p, iterator1, iterator2)
+    raises(TypeError, lambda: p.transform(5))
+    raises(TypeError, lambda: p.transform(Matrix([[1, 0], [0, 1]])))
 
 
 def test_point3D():
@@ -241,6 +271,8 @@ def test_point3D():
     assert p.translate(1) == Point3D(2, 1, 1)
     assert p.translate(z=1) == Point3D(1, 1, 2)
     assert p.translate(*p.args) == Point3D(2, 2, 2)
+    raises(TypeError, lambda: p.transform(5))
+    raises(TypeError, lambda: p.transform(Matrix([[1, 0], [0, 1]])))
 
     # Test __new__
     assert Point3D(Point3D(1, 2, 3), 4, 5, evaluate=False) ==  Point3D(1, 2, 3)
@@ -1616,13 +1648,6 @@ def test_util():
 
 def test_repr():
     assert repr(Circle((0, 1), 2)) == 'Circle(Point(0, 1), 2)'
-
-
-def test_transform():
-    p = Point(1, 1)
-    assert p.transform(rotate(pi/2)) == Point(-1, 1)
-    assert p.transform(scale(3, 2)) == Point(3, 2)
-    assert p.transform(translate(1, 2)) == Point(2, 3)
 
 
 def test_line_intersection():

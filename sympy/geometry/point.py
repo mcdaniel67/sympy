@@ -16,7 +16,7 @@ from sympy.geometry.exceptions import GeometryError
 from sympy.functions.elementary.miscellaneous import sqrt
 from sympy.functions.elementary.complexes import im
 from .entity import GeometryEntity
-from sympy.matrices import Matrix
+from sympy.matrices import Matrix, Transpose
 from sympy.core.numbers import Float
 from sympy.core.evaluate import global_evaluate
 
@@ -515,8 +515,15 @@ class Point(GeometryEntity):
         geometry.entity.scale
         geometry.entity.translate
         """
-        x, y = self.args
-        return Point(*(Matrix(1, 3, [x, y, 1])*matrix).tolist()[0][:2])
+        if isinstance(matrix, Matrix):
+            if matrix.shape == (3, 3):
+                x, y = self.args
+                mtrx = Transpose(matrix)
+                return Point(*(Matrix(1, 3, [x, y, 1])*mtrx).tolist()[0][:2])
+            else:
+                raise TypeError("Must enter a 3x3 Matrix")
+        else:
+            raise TypeError("Must enter a 3x3 Matrix")
 
     def dot(self, p2):
         """Return dot product of self with another Point."""
