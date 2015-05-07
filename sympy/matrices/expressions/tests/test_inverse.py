@@ -15,6 +15,7 @@ E = MatrixSymbol('E', m, n)
 def test_inverse():
     raises(ShapeError, lambda: Inverse(A))
     raises(ShapeError, lambda: Inverse(A*B))
+    raises(TypeError, lambda: Inverse(n))
 
     assert Inverse(C).shape == (n, n)
     assert Inverse(A*E).shape == (n, n)

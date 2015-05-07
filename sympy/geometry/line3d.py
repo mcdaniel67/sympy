@@ -839,12 +839,8 @@ class Line3D(LinearEntity3D):
         else:
             p1 = Point3D(p1)
         if pt is not None and len(direction_ratio) == 0:
-            try:
-                pt = Point3D(pt)
-            except NotImplementedError:
-                raise ValueError('The 2nd argument was not a valid Point. '
-                'If it was the direction_ratio of the desired line, enter it '
-                'with keyword "direction_ratio".')
+            pt = Point3D(pt)
+            # Point3D doesn't have NotImplementedError.
         elif len(direction_ratio) == 3 and pt is None:
             pt = Point3D(p1.x + direction_ratio[0], p1.y + direction_ratio[1],
                          p1.z + direction_ratio[2])
@@ -1045,12 +1041,8 @@ class Ray3D(LinearEntity3D):
         else:
             p1 = Point3D(p1)
         if pt is not None and len(direction_ratio) == 0:
-            try:
-                pt = Point3D(pt)
-            except NotImplementedError:
-                raise ValueError('The 2nd argument was not a valid Point. '
-                'If it was the direction_ratio of the desired line, enter it '
-                'with keyword "direction_ratio".')
+            pt = Point3D(pt)
+            # Point3D does not contain NotImplementedError
         elif len(direction_ratio) == 3 and pt is None:
             pt = Point3D(p1.x + direction_ratio[0], p1.y + direction_ratio[1],
                          p1.z + direction_ratio[2])

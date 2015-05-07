@@ -1,5 +1,5 @@
 from sympy import (pi, sin, cos, Symbol, Integral, summation, sqrt, log,
-                   oo, LambertW, I, meijerg, exp_polar, Max)
+                   oo, LambertW, I, meijerg, exp_polar, Max, Eq)
 from sympy.plotting import (plot, plot_parametric, plot3d_parametric_line,
                             plot3d, plot3d_parametric_surface)
 from sympy.plotting.plot import unset_show
@@ -233,6 +233,8 @@ def test_matplotlib():
     matplotlib = import_module('matplotlib', min_module_version='1.1.0', catch=(RuntimeError,))
     if matplotlib:
         try:
+            # Disale maximum number of open figures for matplotlib
+            matplotlib.rc('figure', max_open_warning=-1)
             plot_and_save('test')
         finally:
             # clean up

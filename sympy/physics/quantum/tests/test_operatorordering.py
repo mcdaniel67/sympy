@@ -16,9 +16,19 @@ def test_normal_order():
     assert normal_order(Dagger(a) * a) == Dagger(a) * a
     assert normal_order(a * Dagger(a) ** 2) == Dagger(a) ** 2 * a
 
+    assert normal_order(a + Dagger(a)) == Dagger(a) + a
+    assert normal_order(Dagger(a) + a) == Dagger(a) + a
+    assert normal_order(a + Dagger(a) ** 2) == Dagger(a) ** 2 + a
+
+    assert normal_order(a ** Dagger(a)) == a ** Dagger(a)
+    assert normal_order(Dagger(a) ** a) == Dagger(a) ** a
+
     assert normal_order(c * Dagger(c)) == - Dagger(c) * c
     assert normal_order(Dagger(c) * c) == Dagger(c) * c
     assert normal_order(c * Dagger(c) ** 2) == Dagger(c) ** 2 * c
+
+    assert normal_order(a * a * Dagger(a) * a * Dagger(a)) == Dagger(a)**2*a**3
+
 
 
 def test_normal_ordered_form():

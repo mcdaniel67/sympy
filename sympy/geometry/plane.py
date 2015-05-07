@@ -260,6 +260,8 @@ class Plane(GeometryEntity):
                 return True
             else:
                 return False
+        else:
+            return False
 
     def is_perpendicular(self, l):
         """is the given geometric entity perpendicualar to the given plane?
@@ -363,6 +365,7 @@ class Plane(GeometryEntity):
             f = sqrt(sum([i**2 for i in self.normal_vector]))
             return abs(e / f)
 
+
     def angle_between(self, o):
         """Angle between the plane and other geometric entity.
 
@@ -442,11 +445,11 @@ class Plane(GeometryEntity):
 
         """
         planes = set(planes)
-        if len(planes) < 2:
-            return False
         for i in planes:
             if not isinstance(i, Plane):
                 raise ValueError('All objects should be Planes but got %s' % i.func)
+        if len(planes) < 2:
+            return False
         planes = list(planes)
         first = planes.pop(0)
         sol = first.intersection(planes[0])
