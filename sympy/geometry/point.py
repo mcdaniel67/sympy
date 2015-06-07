@@ -518,8 +518,7 @@ class Point(GeometryEntity):
         """
         if isinstance(matrix, Matrix) and matrix.shape == (3, 3):
             x, y = self.args
-            matrix_t = Transpose(matrix)
-            return Point(*(Matrix(1, 3, [x, y, 1])*matrix_t).tolist()[0][:2])
+            return Point(*(Matrix(1, 3, [x, y, 1])*matrix).tolist()[0][:2])
         else:
             raise ValueError("The argument to the transform function must be " \
             + "a 3x3 matrix")
